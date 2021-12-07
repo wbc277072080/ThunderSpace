@@ -12,6 +12,11 @@ public class PlayerInput : ScriptableObject, InputActions.IGameplayActions
     //event for stop move
     public event UnityAction onStopMove = delegate{};
 
+    //fire
+    public event UnityAction onFire = delegate{};
+    public event UnityAction onStopFire = delegate{};
+
+
     InputActions inputActions;
 
     void OnEnable() {
@@ -43,6 +48,16 @@ public class PlayerInput : ScriptableObject, InputActions.IGameplayActions
         //stop move when released the key
         if(context.phase == InputActionPhase.Canceled){
             onStopMove.Invoke();
+        }
+    }
+
+    public void OnFire(InputAction.CallbackContext context){
+        if(context.phase == InputActionPhase.Performed){
+            onFire.Invoke();
+        }
+
+        if(context.phase == InputActionPhase.Canceled){
+            onStopFire.Invoke();
         }
     }
     
