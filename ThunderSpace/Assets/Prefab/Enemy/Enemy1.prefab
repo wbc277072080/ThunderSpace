@@ -104,7 +104,7 @@ MonoBehaviour:
   deathVFX: {fileID: 2342042931496088306, guid: 97b415311529fa145aacd3eedaac728e, type: 3}
   maxHealth: 12
   onHeadHealthBar: {fileID: 8265962679297573019}
-  showOnHeadHealthBar: 0
+  showOnHeadHealthBar: 1
 --- !u!50 &-5967268921426927711
 Rigidbody2D:
   serializedVersion: 4

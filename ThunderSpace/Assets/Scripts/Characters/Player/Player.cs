@@ -121,7 +121,7 @@ public class Player : Character
         Quaternion moveRotation = Quaternion.AngleAxis(moveRotationAngle * moveInput.y, Vector3.right);
 
         moveCoroutine = StartCoroutine(MoveCoroutine(accelerationTime,moveInput.normalized * moveSpeed, moveRotation));
-        StartCoroutine(MovePositionLimitCoroutine());
+        StartCoroutine(nameof(MovePositionLimitCoroutine));
     }
 
     void StopMove(){
@@ -130,7 +130,7 @@ public class Player : Character
             StopCoroutine(moveCoroutine);
         }
         moveCoroutine = StartCoroutine(MoveCoroutine(decelerationTime,Vector2.zero,Quaternion.identity));
-        StopCoroutine(MovePositionLimitCoroutine());
+        StopCoroutine(nameof(MovePositionLimitCoroutine));
     }
 
     IEnumerator MovePositionLimitCoroutine(){
