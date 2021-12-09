@@ -18,7 +18,14 @@ public class Player : MonoBehaviour
 
     //fire
     [SerializeField] GameObject projectile;
-    [SerializeField] Transform muzzle;
+    [SerializeField] GameObject projectile1;
+    [SerializeField] GameObject projectile2;
+
+    [SerializeField] Transform muzzleMiddle;
+    [SerializeField] Transform muzzleTop;
+    [SerializeField] Transform muzzleBottom;
+
+    [SerializeField, Range(0,2)] int weaponPower = 0;
     [SerializeField] float fireInterval = 0.2f;
     WaitForSeconds waiteForFireInterval;
 
@@ -104,8 +111,46 @@ public class Player : MonoBehaviour
 
     IEnumerator FireCoroutine(){
         
+        
         while(true){
-            Instantiate(projectile, muzzle.position, Quaternion.identity);
+            //different fire power
+
+            // old function
+            // switch (weaponPower)
+            // {
+            //     case 0:
+            //         Instantiate(projectile, muzzleMiddle.position, Quaternion.identity);
+            //         break;
+            //     case 1:
+            //         Instantiate(projectile1, muzzleTop.position, Quaternion.identity);
+            //         Instantiate(projectile2, muzzleBottom.position, Quaternion.identity);
+            //         break;
+            //     case 2:
+            //         Instantiate(projectile, muzzleMiddle.position, Quaternion.identity);
+            //         Instantiate(projectile1, muzzleTop.position, Quaternion.identity);
+            //         Instantiate(projectile2, muzzleBottom.position, Quaternion.identity);
+            //         break;
+            //     default:
+            //         break;
+            // }
+
+            switch (weaponPower)
+            {
+                case 0:
+                    PoolManager.Release(projectile,muzzleMiddle.position);
+                    break;
+                case 1:
+                    PoolManager.Release(projectile1,muzzleTop.position);
+                    PoolManager.Release(projectile2,muzzleBottom.position);
+                    break;
+                case 2:
+                    PoolManager.Release(projectile1,muzzleTop.position);
+                    PoolManager.Release(projectile,muzzleMiddle.position);
+                    PoolManager.Release(projectile2,muzzleBottom.position);
+                    break;
+                default:
+                    break;
+            }
             //fire interval
             yield return waiteForFireInterval;
         }

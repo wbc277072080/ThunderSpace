@@ -61,7 +61,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lifttime: 3
-  destroyGameObject: 1
+  destroyGameObject: 0
 --- !u!1 &6711237373229847789
 GameObject:
   m_ObjectHideFlags: 0
