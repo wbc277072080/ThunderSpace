@@ -10,6 +10,8 @@ public class Player : Character
     [SerializeField] bool regenerateHealth = true;
     [SerializeField] float healthRegenerateTime;
     [SerializeField, Range(0f,1f)] float healthRegeneratePercent;
+    [SerializeField] StatsBar_HUD statsBar_HUD;
+    
 
     // Start is called before the first frame update
     [Header("input")]
@@ -58,6 +60,8 @@ public class Player : Character
         input.onStopFire +=StopFire;
     }
 
+   
+
      void OnDisable() {
         input.onMove -= Move;
         input.onStopMove -= StopMove;
@@ -68,9 +72,10 @@ public class Player : Character
         rigidbody.gravityScale = 0f;
         waiteForFireInterval  = new WaitForSeconds(fireInterval);
         waitHealthRegenerateTime = new WaitForSeconds(healthRegenerateTime);
-        input.EnableGameplayInput();
 
-        TakeDamage(50f);
+        //health
+        statsBar_HUD.Init(health,maxHealth);
+        input.EnableGameplayInput();
         
     }
 
@@ -79,6 +84,7 @@ public class Player : Character
     //take damage
     public override void TakeDamage(float damage){
         base.TakeDamage(damage);
+        statsBar_HUD.UpdateStats(health,maxHealth);
         if(gameObject.activeSelf){
             if(regenerateHealth){
                 if(healthRegenerateCoroutine!=null){
@@ -87,6 +93,20 @@ public class Player : Character
                 healthRegenerateCoroutine = StartCoroutine(HealthRegenerateCoroutine(waitHealthRegenerateTime,healthRegeneratePercent));
             }
         }
+    }
+
+    //override
+    //restore health
+    public override void RestoreHealth(float value){
+        base.RestoreHealth(value);
+        statsBar_HUD.UpdateStats(health,maxHealth);
+    }
+
+    //override
+    //die
+    public override void Die(){
+        statsBar_HUD.UpdateStats(0f,maxHealth);
+        base.Die();
     }
 
     //move
@@ -122,11 +142,11 @@ public class Player : Character
     }
     IEnumerator MoveCoroutine(float time, Vector2 moveVelovity,Quaternion moveRotation){
         float t = 0f;
-        while(t < time){
+        while(t < 1f){
             t += Time.fixedDeltaTime / time;
-            rigidbody.velocity = Vector2.Lerp(rigidbody.velocity, moveVelovity, t/time);
+            rigidbody.velocity = Vector2.Lerp(rigidbody.velocity, moveVelovity, t);
             //rotation
-            transform.rotation = Quaternion.Lerp(transform.rotation, moveRotation, t/time);
+            transform.rotation = Quaternion.Lerp(transform.rotation, moveRotation, t);
 
             yield return null;
         }

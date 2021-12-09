@@ -8,17 +8,22 @@ public class PoolManager : MonoBehaviour
 
     [SerializeField] Pool[] enemyProjectilePools;
 
+    //VFX
+    [SerializeField] Pool[] vFXPools;
+
 
     static Dictionary<GameObject, Pool> dictionary;
     void Start(){
         dictionary = new Dictionary<GameObject, Pool>();
         Initialize(playerProjectilePools);
         Initialize(enemyProjectilePools);
+        Initialize(vFXPools);
     }
 
     void OnDestroy() {
         CheckPoolSize(playerProjectilePools);
         CheckPoolSize(enemyProjectilePools);
+        CheckPoolSize(vFXPools);
     }
 
     void CheckPoolSize(Pool[] pools){

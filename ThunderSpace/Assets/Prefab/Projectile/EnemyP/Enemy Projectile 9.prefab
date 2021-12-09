@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8013266813714541699}
   - component: {fileID: 7693343766876419476}
   - component: {fileID: 6837196173320368986}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Capsule
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -92,8 +92,8 @@ GameObject:
   - component: {fileID: 8345576562994101742}
   - component: {fileID: 8345576562994101743}
   - component: {fileID: 8345576562994101736}
-  - component: {fileID: 2905758837993052768}
-  m_Layer: 0
+  - component: {fileID: -149439245861677104}
+  m_Layer: 9
   m_Name: Enemy Projectile 9
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -141,19 +141,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f12054cdd460ce4a991c2b7a1eef921, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hitVFX: {fileID: 4801493125213720806, guid: 94d3dff6247d98e4cb4d8d6f0be5e291, type: 3}
+  damage: 10
   moveSpeed: 5
   moveDirection: {x: -1, y: 0}
---- !u!114 &2905758837993052768
-MonoBehaviour:
+--- !u!70 &-149439245861677104
+CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8345576562994101737}
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cbd0cfb87cf46b447b4c6e33344dfda8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeed: 10
-  moveDirection: {x: 0, y: 0}
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_Size: {x: 0.24, y: 0.1}
+  m_Direction: 1
