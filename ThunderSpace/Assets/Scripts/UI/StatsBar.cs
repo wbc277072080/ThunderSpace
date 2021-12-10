@@ -6,10 +6,10 @@ using UnityEngine.UI;
 public class StatsBar : MonoBehaviour
 {
     
-    Canvas canvas;
+    //Canvas canvas;
     [SerializeField] Image fillImageBack;
     [SerializeField] Image fillImageFront;
-    [SerializeField] float fillSpeed = 0.1f;
+    [SerializeField] float fillSpeed = 1f;
     [SerializeField] bool delayFill = true;
     [SerializeField] float fillDelayTime = 0.5f;
     float t;
@@ -20,8 +20,10 @@ public class StatsBar : MonoBehaviour
     Coroutine bufferdFillCoroutine;
     
     void Awake(){
-        canvas = GetComponent<Canvas>();
-        canvas.worldCamera = Camera.main;
+        //canvas = GetComponent<Canvas>();
+        if(TryGetComponent<Canvas>(out Canvas canvas)){
+             canvas.worldCamera = Camera.main;
+        }
         waitForDelayFill = new WaitForSeconds(fillDelayTime);
     }
 
@@ -67,9 +69,11 @@ public class StatsBar : MonoBehaviour
         }
 
         t=0f;
+        float previousFillAmount = curFillAmount;
+
         while(t<1f){
             t+=Time.deltaTime * fillSpeed;
-            curFillAmount = Mathf.Lerp(curFillAmount,targetFillAmount,t);
+            curFillAmount = Mathf.Lerp(previousFillAmount,targetFillAmount,t);
             image.fillAmount = curFillAmount;
 
             yield return null;

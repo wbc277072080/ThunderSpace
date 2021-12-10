@@ -17,6 +17,11 @@ public class EnemyController : MonoBehaviour
     [SerializeField] GameObject[] projectiles;
     [SerializeField] Transform muzzle;
 
+    //audio
+    [Header("Audio")]
+    [SerializeField] AudioClip projectileSFX;
+    [SerializeField] float projectileSFXVolume = 0.4f;
+
     void OnEnable(){
         StartCoroutine(nameof(RandomlyMovingCoroutine));
         StartCoroutine(nameof(RandomlyFireCoroutine));
@@ -32,9 +37,9 @@ public class EnemyController : MonoBehaviour
         Vector3 targetPosition = Viewport.Instance.RandomRightHalfPosition(paddingX, paddingY);
         while(gameObject.activeSelf){
             // if has not arrived target postion
-            if(Vector3.Distance(transform.position,targetPosition)>Mathf.Epsilon){
+            if(Vector3.Distance(transform.position,targetPosition)>= moveSpeed * Time.fixedDeltaTime){
                 //keep moving to targetPosition
-                transform.position = Vector3.MoveTowards(transform.position,targetPosition,moveSpeed * Time.deltaTime);
+                transform.position = Vector3.MoveTowards(transform.position,targetPosition,moveSpeed * Time.fixedDeltaTime);
                 //make enemy rotate with x axis while moving
                 transform.rotation = Quaternion.AngleAxis((targetPosition - transform.position).normalized.y * moveRotationAngle, Vector3.right);
 
@@ -46,7 +51,7 @@ public class EnemyController : MonoBehaviour
             }
             
             
-            yield return null;
+            yield return new WaitForFixedUpdate();
         }
     }
 
@@ -56,10 +61,16 @@ public class EnemyController : MonoBehaviour
         while(gameObject.activeSelf){
             yield return new WaitForSeconds(Random.Range(minFireInterval,maxFireInterval));
 
+            if(GameManager.GameState == GameState.GameOver){
+                yield break;
+            }
+
             foreach (var projectile in projectiles)
             {
                 PoolManager.Release(projectile,muzzle.position);
             }
+
+            AudioManager.Instance.PlaySFX(projectileSFX,projectileSFXVolume);
         }
     }
 }

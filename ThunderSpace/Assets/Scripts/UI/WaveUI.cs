@@ -6,8 +6,10 @@ public class WaveUI : MonoBehaviour
     Text waveText;
 
     void Awake(){
-        GetComponent<Canvas>().worldCamera = Camera.main;
-
+        //GetComponent<Canvas>().worldCamera = Camera.main;
+        if(TryGetComponent<Canvas>(out Canvas canvas)){
+             canvas.worldCamera = Camera.main;
+        }
         waveText = GetComponentInChildren<Text>();
     }
 

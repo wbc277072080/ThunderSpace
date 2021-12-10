@@ -5,13 +5,18 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class Player : Character
 {
-    //health
     
+    
+    //health
     [SerializeField] bool regenerateHealth = true;
     [SerializeField] float healthRegenerateTime;
     [SerializeField, Range(0f,1f)] float healthRegeneratePercent;
     [SerializeField] StatsBar_HUD statsBar_HUD;
     
+    //audio
+    [Header("Audio")]
+    [SerializeField] AudioClip projectileSFX;
+    [SerializeField] float projectileSFXVolume = 0.4f;
 
     // Start is called before the first frame update
     [Header("input")]
@@ -22,8 +27,8 @@ public class Player : Character
     [SerializeField] float moveSpeed = 10f;
     [SerializeField] float paddingX = 0.2f;
     [SerializeField] float paddingY = 0.2f;
-    [SerializeField] float accelerationTime = 3f;
-    [SerializeField] float decelerationTime = 3f;
+    [SerializeField] float accelerationTime = 0.5f;
+    [SerializeField] float decelerationTime = 0.5f;
     [SerializeField] float moveRotationAngle = 50f;
 
     //fire
@@ -65,6 +70,9 @@ public class Player : Character
      void OnDisable() {
         input.onMove -= Move;
         input.onStopMove -= StopMove;
+
+        input.onFire -= Fire;
+        input.onStopFire -=StopFire;
     }
 
     void Start()
@@ -105,6 +113,9 @@ public class Player : Character
     //override
     //die
     public override void Die(){
+        GameManager.onGameOver?.Invoke();
+
+        GameManager.GameState = GameState.GameOver;
         statsBar_HUD.UpdateStats(0f,maxHealth);
         base.Die();
     }
@@ -142,13 +153,16 @@ public class Player : Character
     }
     IEnumerator MoveCoroutine(float time, Vector2 moveVelovity,Quaternion moveRotation){
         float t = 0f;
+        Vector2 previousVelocity = rigidbody.velocity;
+        Quaternion previousRotation = transform.rotation;
+
         while(t < 1f){
             t += Time.fixedDeltaTime / time;
-            rigidbody.velocity = Vector2.Lerp(rigidbody.velocity, moveVelovity, t);
+            rigidbody.velocity = Vector2.Lerp(previousVelocity, moveVelovity, t);
             //rotation
-            transform.rotation = Quaternion.Lerp(transform.rotation, moveRotation, t);
+            transform.rotation = Quaternion.Lerp(previousRotation, moveRotation, t);
 
-            yield return null;
+            yield return new WaitForFixedUpdate();
         }
     }
 
@@ -166,26 +180,6 @@ public class Player : Character
         
         
         while(true){
-            //different fire power
-
-            // old function
-            // switch (weaponPower)
-            // {
-            //     case 0:
-            //         Instantiate(projectile, muzzleMiddle.position, Quaternion.identity);
-            //         break;
-            //     case 1:
-            //         Instantiate(projectile1, muzzleTop.position, Quaternion.identity);
-            //         Instantiate(projectile2, muzzleBottom.position, Quaternion.identity);
-            //         break;
-            //     case 2:
-            //         Instantiate(projectile, muzzleMiddle.position, Quaternion.identity);
-            //         Instantiate(projectile1, muzzleTop.position, Quaternion.identity);
-            //         Instantiate(projectile2, muzzleBottom.position, Quaternion.identity);
-            //         break;
-            //     default:
-            //         break;
-            // }
 
             switch (weaponPower)
             {
@@ -204,8 +198,13 @@ public class Player : Character
                 default:
                     break;
             }
+            //audio
+            AudioManager.Instance.PlaySFX(projectileSFX,projectileSFXVolume);
+
             //fire interval
             yield return waiteForFireInterval;
+
+            
         }
     }
 

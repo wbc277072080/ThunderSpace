@@ -9,6 +9,11 @@ public class Projectile : MonoBehaviour
     [SerializeField] float moveSpeed = 10f;
     [SerializeField] protected Vector2 moveDirection;
 
+    //audio
+    [Header("Audio")]
+    [SerializeField] AudioClip hitSFX;
+    [SerializeField] float hitSFXVolume = 0.4f;
+
     protected GameObject target;
 
     protected virtual void OnEnable(){
@@ -28,6 +33,7 @@ public class Projectile : MonoBehaviour
             character.TakeDamage(damage);
             //var contactPoint = collision.GetContact(0);
             PoolManager.Release(hitVFX, collision.GetContact(0).point, Quaternion.LookRotation(collision.GetContact(0).normal));
+            AudioManager.Instance.PlaySFX(hitSFX,hitSFXVolume);
             gameObject.SetActive(false);
         }
     }

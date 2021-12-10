@@ -10,6 +10,14 @@ public class Character : MonoBehaviour
 
     [SerializeField] StatsBar onHeadHealthBar;
     [SerializeField] bool showOnHeadHealthBar = true;
+
+    //audio
+    [Header("Audio")]
+    [SerializeField] AudioClip deathSFX;
+    [SerializeField] float deathSFXVolume = 0.4f;
+
+
+
     //current health
     protected float health;
 
@@ -45,6 +53,7 @@ public class Character : MonoBehaviour
 
     public virtual void Die(){
         health = 0f;
+        AudioManager.Instance.PlaySFX(deathSFX,deathSFXVolume);
         PoolManager.Release(deathVFX, transform.position);
         gameObject.SetActive(false);
     }

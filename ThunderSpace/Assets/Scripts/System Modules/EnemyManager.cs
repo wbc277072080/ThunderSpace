@@ -45,7 +45,7 @@ public class EnemyManager : Singleton<EnemyManager>
     IEnumerator Start(){
         //when there are no enemies
         while(spawnEnemy){
-            yield return waitUntileNoEnemy;
+           
 
             //wave UI
             waveUI.SetActive(true);
@@ -72,6 +72,7 @@ public class EnemyManager : Singleton<EnemyManager>
             yield return waitTimeBetweenSpawns;
         }
 
+        yield return waitUntileNoEnemy;
         waveNumber++;
     }
 
